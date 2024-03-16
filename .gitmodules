@@ -5,7 +5,7 @@
 [submodule "core"]
 	path = core
 	url = https://github.com/mywalkb/LSPosed_mod.git
-	branch = master
+	branch = main
 [submodule "patch/libs/manifest-editor"]
 	path = patch/libs/manifest-editor
 	url = https://github.com/WindySha/ManifestEditor.git
