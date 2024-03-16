@@ -1,21 +1,45 @@
 package org.lsposed.lspatch.manager
 
-import android.app.Service
-import android.content.Intent
+import android.os.Binder
 import android.os.IBinder
+import android.os.ParcelFileDescriptor
 import android.util.Log
+import kotlinx.coroutines.runBlocking
+import org.lsposed.lspatch.config.ConfigManager
+import org.lsposed.lspatch.lspApp
+import org.lsposed.lspd.models.Module
+import org.lsposed.lspd.service.ILSPApplicationService
 
+object ManagerService : ILSPApplicationService.Stub() {
 
-class ModuleService : Service() {
+    private const val TAG = "ManagerService"
 
-    companion object {
-        private const val TAG = "ModuleService"
+    override fun getLegacyModulesList(): List<Module> {
+        val app = lspApp.packageManager.getNameForUid(Binder.getCallingUid())
+        val list = app?.let {
+            runBlocking { ConfigManager.getModuleFilesForApp(it) }
+        }.orEmpty()
+        Log.d(TAG, "$app calls getLegacyModulesList: $list")
+        return list
     }
 
-    override fun onBind(intent: Intent): IBinder? {
-        val packageName = intent.getStringExtra("packageName") ?: return null
-        // TODO: Authentication
-        Log.i(TAG, "$packageName requests binder")
-        return ManagerService.asBinder()
+    override fun getModulesList(): List<Module> {
+        return emptyList()
+    }
+
+    override fun getPrefsPath(packageName: String): String {
+        TODO("Not yet implemented")
+    }
+
+    override fun requestInjectedManagerBinder(binder: List<IBinder>?): ParcelFileDescriptor? {
+        return null
+    }
+
+    override fun requestCLIBinder(sPid: String?, binder: List<IBinder?>?): Int {
+        return -1
+    }
+
+    override fun requestModuleBinder(name: String?): IBinder? {
+        return null
     }
 }
