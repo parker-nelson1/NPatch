@@ -1,4 +1,4 @@
-name: Build CI APK
+name: Android CI
 
 on:
   workflow_dispatch:
@@ -8,8 +8,8 @@ on:
 
 jobs:
   build:
-    name: Build 
-    runs-on:  ubuntu-latest 
+    name: Build
+    runs-on: ubuntu-latest
     env:
       CCACHE_COMPILERCHECK: '%compiler% -dumpmachine; %compiler% -dumpversion'
       CCACHE_NOHASHDIR: 'true'
@@ -83,17 +83,17 @@ jobs:
         echo 'android.native.buildOutput=verbose' >> gradle.properties
         ./gradlew buildAll
 
-    - name: Upload Release artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: npatch-release
-        path: out/release/*
-
     - name: Upload Debug artifact
       uses: actions/upload-artifact@v3
       with:
-        name: npatch-debug
+        name: lspatch-debug
         path: out/debug/*
+
+    - name: Upload Release artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: lspatch-release
+        path: out/release/*
 
     - name: Upload mappings
       uses: actions/upload-artifact@v3
