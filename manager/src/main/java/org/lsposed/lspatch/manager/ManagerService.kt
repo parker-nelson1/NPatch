@@ -19,7 +19,7 @@ object ManagerService : ILSPApplicationService.Stub() {
         val list = app?.let {
             runBlocking { ConfigManager.getModuleFilesForApp(it) }
         }.orEmpty()
-        Log.d(TAG, "$app calls getLegacyModulesList: $list , Caller: ${getCallingUid()}")
+        Log.d(TAG, "$app calls getLegacyModulesList: $list")
         return list
     }
 
@@ -32,6 +32,14 @@ object ManagerService : ILSPApplicationService.Stub() {
     }
 
     override fun requestInjectedManagerBinder(binder: List<IBinder>?): ParcelFileDescriptor? {
+        return null
+    }
+
+    override fun requestCLIBinder(sPid: String?, binder: List<IBinder?>?): Int {
+        return -1
+    }
+
+    override fun requestModuleBinder(name: String?): IBinder? {
         return null
     }
 }
